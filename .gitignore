@@ -1,0 +1,7 @@
+server/node_modules
+server/experiments
+server/files
+server/.env
+ui/node_modules
+ui/dist
+*.conf
