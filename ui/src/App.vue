@@ -23,9 +23,11 @@
           </b-input-group-prepend>
           <b-form-input v-model="name" :state="nameOK"></b-form-input>
           <b-input-group-append>
-            <b-input-group-text @click="buttonClick">
-              <b-icon-play v-if="!downloading" />
-              <b-icon-stop-fill v-if="downloading" />
+            <b-input-group-text v-if="!downloading" @click="newTask">
+              <b-icon-play />
+            </b-input-group-text>
+            <b-input-group-text v-if="downloading" @click="stopTask">
+              <b-icon-stop-fill />
             </b-input-group-text>
           </b-input-group-append>
         </b-input-group>
@@ -91,7 +93,6 @@ export default {
       progress: 0,
       taskID: "",
       downloading: false,
-      buttonClick: this.newTask,
       files: [],
       password: "",
       passphrase: ""
@@ -146,6 +147,14 @@ export default {
           }
         });
     },
+    stopTask: function() {
+      this.downloading = false;
+      axios
+        .delete("/api/tasks/"+this.taskID)
+        .then(() => {
+          this.resetControl();
+        })
+    },
     resetForm: function() {
       this.url = "";
       this.name = "";
@@ -158,7 +167,6 @@ export default {
       this.progress = 0;
       this.taskID = "";
       this.downloading = false;
-      this.buttonClick = this.newTask;
     },
     listFiles: function() {
       axios.get("/api/files").then(response => {
@@ -191,10 +199,6 @@ export default {
             //此时正在下载
             this.downloading = true;
             this.progress = response.data.progress;
-            this.buttonClick = function() {
-              this.resetControl();
-              axios.delete("/api/tasks/" + this.taskID);
-            };
             progressBar.dispatchEvent(new Event("update-progress"));
           } else {
             //此时发生错误

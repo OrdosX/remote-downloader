@@ -97,10 +97,8 @@ app.delete('/tasks/:id', (req, res) => {
         t.code = CODE_CANCELING;
         tasks.set(req.params.id, t)
         t.downloader.stop().catch(()=>{});
-        res.json({code: CODE_SUCCESS, errmsg: ""});
-    } else {
-        res.json({code: CODE_NOT_FOUND, errmsg: "任务不存在"});
     }
+    res.json({code: CODE_SUCCESS, errmsg: ""});
 })
 
 // 接口：获取文件及其链接的列表
