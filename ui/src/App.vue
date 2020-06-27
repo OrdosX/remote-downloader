@@ -222,13 +222,16 @@ export default {
             this.downloading = true;
             this.progress = response.data.progress;
             progressBar.dispatchEvent(new Event("update-progress"));
+          } else if (response.data.code == 2) {
+            //此时取消下载
+            this.resetControl();
           } else {
             //此时发生错误
             this.resetControl();
             alert(response.data.errmsg);
           }
         });
-      }, 0);
+      }, 500);
     });
 
     this.listFiles();
