@@ -69,7 +69,7 @@
               <b-button variant="success" :data-clipboard-text="f.URL" class="clipboard-item mr-3">
                 <b-icon-clipboard />
               </b-button>
-              <b-button variant="danger" @click="removeFile(f.name)" v-if="passphrase.length != 0">
+              <b-button variant="danger" @click="removeFile(f.name)" v-if="isLogin">
                 <b-icon-trash />
               </b-button>
             </b-td>
@@ -191,8 +191,9 @@ export default {
       });
     },
     login: function() {
-      axios.get("/salt").then(resp1 => {
-        axios.post("/sessions", {
+      axios.get("/api/salt").then(resp1 => {
+        axios.post("/api/keys", {
+          saltID: resp1.data.saltID,
           password: sha256(this.password + resp1.data.salt)
         }).then(resp2 => {
           if(resp2.data.code == 0) {

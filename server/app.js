@@ -1,6 +1,7 @@
 const { DownloaderHelper } = require('node-downloader-helper');
 const sha256 = require("js-sha256").sha256
 const express = require('express');
+const session = require('express-session');
 const uuid = require('uuid/v4');
 const logger = require('./log');
 const fs = require('fs');
@@ -32,11 +33,18 @@ const CODE_WRONG_INPUT = -3;
 const CODE_UNAUTHORIZED = -4;
 const CODE_WRONG_PASSWORD = -5;
 
+app.use(session({
+    secret: process.env.PASSWORD,
+    resave: false,
+    saveUninitialized: true
+}))
 app.use((req, res, next) => {
     // 未登录用户可以登录和查看文件列表
-    if(req.path == '/keys' && req.method == 'get') {
+    if(req.path == '/keys' && req.method == 'POST') {
         next();
-    } else if(req.path == '/files' && req.method == 'get') {
+    } else if(req.path == '/salt' && req.method == 'GET') {
+        next();
+    } else if(req.path == '/files' && req.method == 'GET') {
         next();
     } else {
         // session中没有key则返回未登录
@@ -132,6 +140,9 @@ app.get('/files', (req, res) => {
     fs.readdir(downloadDir, (_err, fileName) => {
         let files = [];
         for(let i = 0; i < fileName.length; i++) {
+            if(fileName[i] == '.placeholder') {
+                continue;
+            }
             files.push({name: fileName[i], URL: prefix+fileName[i]});
         }
         if(!keys.find(e => {return e == req.session.key})) {
@@ -183,7 +194,8 @@ app.post('/keys', (req, res) => {
             let key = sha256(process.env.PASSWORD + Date.now()).slice(0, 10);
             keys.push(key);
             salts.delete(body.saltID);
-            res.json({code: CODE_SUCCESS, key});
+            req.session.key = key;
+            res.json({code: CODE_SUCCESS});
         } else {
             res.json({code: CODE_WRONG_PASSWORD, errmsg: '密码错误'});
         }
