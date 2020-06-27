@@ -1,13 +1,17 @@
 const { DownloaderHelper } = require('node-downloader-helper');
 const sha256 = require("js-sha256").sha256
 const express = require('express');
-const uuid = require('uuid/v1');
+const uuid = require('uuid/v4');
 const logger = require('./log');
 const fs = require('fs');
 const app = express();
 
 // 在这里储存任务信息
 const tasks = new Map();
+// 在这里储存盐
+const salts = new Map();
+// 在这里储存access key
+var keys = [];
 
 // 读取配置文件，设置常量
 require('dotenv').config();
@@ -17,7 +21,6 @@ if(process.env.USE_HTTPS === "true") {
 } else {
     prefix = "http://" + process.env.SERVER_NAME + "/";
 }
-const passphrase = sha256(process.env.PASSWORD);
 const tempDir = __dirname+'/temp'
 const downloadDir = __dirname+'/files';
 const CODE_SUCCESS = 0;
@@ -26,6 +29,29 @@ const CODE_CANCELING = 2;
 const CODE_DOWNLOAD_FAIL = -1;
 const CODE_NOT_FOUND = -2;
 const CODE_WRONG_INPUT = -3;
+const CODE_UNAUTHORIZED = -4;
+const CODE_WRONG_PASSWORD = -5;
+
+app.use((req, res, next) => {
+    // 未登录用户可以登录和查看文件列表
+    if(req.path == '/keys' && req.method == 'get') {
+        next();
+    } else if(req.path == '/files' && req.method == 'get') {
+        next();
+    } else {
+        // session中没有key则返回未登录
+        if(!req.session.key) {
+            res.json({code: CODE_UNAUTHORIZED, errmsg: "未登录"});
+            return;
+        }
+        // session中的key不是由此次启动时间生成则返回登录过期
+        if(!keys.find(e => {return e == req.session.key})) {
+            res.json({code: CODE_UNAUTHORIZED, errmsg: "登录过期"});
+            return;
+        }
+        next();
+    }
+})
 
 // 接口：新建任务
 // 示例：{URL: "https://example.com/xxx", name: "xxx"}
@@ -102,13 +128,17 @@ app.delete('/tasks/:id', (req, res) => {
 })
 
 // 接口：获取文件及其链接的列表
-app.get('/files', (_req, res) => {
+app.get('/files', (req, res) => {
     fs.readdir(downloadDir, (_err, fileName) => {
         let files = [];
         for(let i = 0; i < fileName.length; i++) {
             files.push({name: fileName[i], URL: prefix+fileName[i]});
         }
-        res.json(files);
+        if(!keys.find(e => {return e == req.session.key})) {
+            res.json({code: CODE_UNAUTHORIZED, files});
+        } else {
+            res.json({code: CODE_SUCCESS, files});
+        }
     })
 })
 
@@ -120,6 +150,42 @@ app.delete('/files/:name', (req, res) => {
             res.json({ code: CODE_SUCCESS, errmsg: "" });
         } else {
             res.json({ code: CODE_NOT_FOUND, errmsg: "文件不存在"});
+        }
+    })
+})
+
+app.get('/salt', (req, res) => {
+    let saltID = uuid().slice(0, 7);
+    let salt = sha256(saltID).slice(5, 9);
+    salts.set(saltID, salt);
+    res.json({saltID: saltID, salt: salt});
+})
+
+// 接口：登录，获取key
+app.post('/keys', (req, res) => {
+    var jsonString = '';
+    req.on("data", (chunk) => {
+        jsonString += chunk;
+    })
+    req.on("end", () => {
+        try {
+            var body = JSON.parse(jsonString);
+        } catch (error) {
+            console.log(jsonString);
+            res.json({ code: CODE_WRONG_INPUT, errmsg: error.message});
+            return;
+        }
+        if(!salts.has(body.saltID)) {
+            res.json({code: CODE_WRONG_PASSWORD, errmsg: '密码错误'});
+            return;
+        }
+        if(body.password == sha256(process.env.PASSWORD + salts.get(body.saltID))) {
+            let key = sha256(process.env.PASSWORD + Date.now()).slice(0, 10);
+            keys.push(key);
+            salts.delete(body.saltID);
+            res.json({code: CODE_SUCCESS, key});
+        } else {
+            res.json({code: CODE_WRONG_PASSWORD, errmsg: '密码错误'});
         }
     })
 })

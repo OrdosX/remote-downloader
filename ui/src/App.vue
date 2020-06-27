@@ -2,7 +2,7 @@
   <div id="app">
     <b-row align-h="center">
       <b-col md="8">
-        <b-input-group class="mt-3" v-if="passphrase.length != 0">
+        <b-input-group class="mt-3" v-if="isLogin">
           <b-input-group-prepend>
             <b-input-group-text>
               <b-icon-link45deg />
@@ -15,7 +15,7 @@
             </b-input-group-text>
           </b-input-group-append>
         </b-input-group>
-        <b-input-group class="mt-3" v-if="passphrase.length != 0">
+        <b-input-group class="mt-3" v-if="isLogin">
           <b-input-group-prepend>
             <b-input-group-text>
               <b-icon-file-earmark-text />
@@ -31,13 +31,14 @@
             </b-input-group-text>
           </b-input-group-append>
         </b-input-group>
-        <b-input-group class="mt-3" v-if="passphrase.length == 0">
+        <b-input-group class="mt-3" v-if="!isLogin">
           <b-input-group-prepend>
             <b-input-group-text>
               <b-icon-shield-lock />
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input v-model="password"></b-form-input>
+          <b-form-input v-model="password" :state="passwordOK" aria-describedby="password-feedback"></b-form-input>
+          <b-form-invalid-feedback id="password-feedback"> {{ passwordErrmsg }} </b-form-invalid-feedback>
           <b-input-group-append>
             <b-input-group-text @click="login">
               <b-icon-play />
@@ -87,15 +88,22 @@ export default {
   name: "App",
   data: function() {
     return {
+      // 下载表单部分
       url: "",
       name: "",
       nameOK: null,
+      // 任务控制部分
       progress: 0,
       taskID: "",
       downloading: false,
+      // 已下载列表
       files: [],
+      // 登录控制部分
       password: "",
-      passphrase: ""
+      passwordOK: null,
+      passwordErrmsg: "",
+      isLogin: false,
+      key: ""
     };
   },
   methods: {
@@ -170,8 +178,9 @@ export default {
     },
     listFiles: function() {
       axios.get("/api/files").then(response => {
+        this.isLogin = (response.data.code == 0);
         this.files = [];
-        for (let f of response.data) {
+        for (let f of response.data.files) {
           this.files.push(f);
         }
       });
@@ -182,8 +191,20 @@ export default {
       });
     },
     login: function() {
-      axios.post("/sessions")
-      sha256(this.password)
+      axios.get("/salt").then(resp1 => {
+        axios.post("/sessions", {
+          password: sha256(this.password + resp1.data.salt)
+        }).then(resp2 => {
+          if(resp2.data.code == 0) {
+            this.key = resp2.data.key;
+            this.isLogin = true;
+          } else {
+            this.password = "";
+            this.passwordOK = false;
+            this.passwordErrmsg = resp2.data.errmsg;
+          }
+        })
+      })
     }
   },
   mounted: function() {
