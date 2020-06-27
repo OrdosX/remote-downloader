@@ -8,15 +8,11 @@
 
 ### 编译UI
 
-安装依赖
-
 ```
+cd ui
+# 安装依赖
 npm i
-```
-
-编译
-
-```
+# 编译
 npm run build
 ```
 
@@ -67,6 +63,7 @@ sudo nginx -s reload
 安装依赖
 
 ```
+cd server
 npm i
 ```
 
