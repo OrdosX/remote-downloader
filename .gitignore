@@ -1,5 +1,5 @@
 server/node_modules
-server/experiments
+server/temp
 server/files
 server/.env
 ui/node_modules

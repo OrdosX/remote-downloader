@@ -23,7 +23,9 @@ if(process.env.USE_HTTPS === "true") {
     prefix = "http://" + process.env.SERVER_NAME + "/";
 }
 const tempDir = __dirname+'/temp'
+if(!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 const downloadDir = __dirname+'/files';
+if(!fs.existsSync(downloadDir)) fs.mkdirSync(downloadDir);
 const CODE_SUCCESS = 0;
 const CODE_DOWNLOADING = 1;
 const CODE_CANCELING = 2;
