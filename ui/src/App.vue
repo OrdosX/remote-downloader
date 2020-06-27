@@ -21,7 +21,7 @@
               <b-icon-file-earmark-text />
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input v-model="name" :state="nameOK"></b-form-input>
+          <b-form-input v-model="name" :state="nameOK" @keyup="nameOK=null"></b-form-input>
           <b-input-group-append>
             <b-input-group-text v-if="!downloading" @click="newTask">
               <b-icon-play />
@@ -37,8 +37,7 @@
               <b-icon-shield-lock />
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input v-model="password" :state="passwordOK" aria-describedby="password-feedback"></b-form-input>
-          <b-form-invalid-feedback id="password-feedback"> {{ passwordErrmsg }} </b-form-invalid-feedback>
+          <b-form-input v-model="password" :state="passwordOK"></b-form-input>
           <b-input-group-append>
             <b-input-group-text @click="login">
               <b-icon-play />
