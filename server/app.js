@@ -18,13 +18,13 @@ var keys = [];
 require('dotenv').config();
 var prefix;
 if(process.env.USE_HTTPS === "true") {
-    prefix = "https://" + process.env.SERVER_NAME + "/";
+    prefix = 'https://' + process.env.SERVER_NAME;
 } else {
-    prefix = "http://" + process.env.SERVER_NAME + "/";
+    prefix = 'http://' + process.env.SERVER_NAME;
 }
-const tempDir = __dirname+'/temp'
+const tempDir = __dirname + '/' + process.env.TEMP_DIR
 if(!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
-const downloadDir = __dirname+'/files';
+const downloadDir = __dirname + '/' + process.env.DOWNLOAD_DIR;
 if(!fs.existsSync(downloadDir)) fs.mkdirSync(downloadDir);
 const CODE_SUCCESS = 0;
 const CODE_DOWNLOADING = 1;
@@ -145,7 +145,7 @@ app.get('/files', (req, res) => {
             if(fileName[i] == '.placeholder') {
                 continue;
             }
-            files.push({name: fileName[i], URL: prefix+fileName[i]});
+            files.push({name: fileName[i], URL: prefix+'/'+process.env.DOWNLOAD_DIR+'/'+fileName[i]});
         }
         if(!keys.find(e => {return e == req.session.key})) {
             res.json({code: CODE_UNAUTHORIZED, files});

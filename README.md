@@ -53,12 +53,14 @@ sudo nginx -s reload
 
 将`.env.example`重命名为`.env`并填写
 
-| 项目        | 说明             | 示例                        |
-| ----------- | ---------------- | --------------------------- |
-| USE_HTTPS   | 是否使用https    | true / false                |
-| SERVER_NAME | 域名或IP地址     | example.com / 114.514.19.19 |
-| PASSWORD    | 访问密码         | E-5+e6Cc,Fd2=Ac1            |
-| PORT        | 服务端监听的端口 | 8081                        |
+| 项目         | 说明                 | 示例                        |
+| ------------ | -------------------- | --------------------------- |
+| USE_HTTPS    | 是否使用https        | true / false                |
+| SERVER_NAME  | 域名或IP地址         | example.com / 114.514.19.19 |
+| PASSWORD     | 访问密码             | E-5+e6Cc,Fd2=Ac1            |
+| PORT         | 服务端监听的端口     | 8081                        |
+| TEMP_DIR     | 临时下载目录         | temp                        |
+| DOWNLOAD_DIR | 下载完成文件存放目录 | files                       |
 
 安装依赖
 
