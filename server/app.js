@@ -199,6 +199,7 @@ app.post('/keys', (req, res) => {
             req.session.key = key;
             res.json({code: CODE_SUCCESS});
         } else {
+            salts.delete(body.saltID);
             res.json({code: CODE_WRONG_PASSWORD, errmsg: '密码错误'});
         }
     })
