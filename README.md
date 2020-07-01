@@ -1,6 +1,14 @@
 # 远程下载器
 
-部署在服务器上的下载器，利用高带宽的优势做跳板加速本地下载，主要用于加速国内下载巨慢的国外资源。
+部署在服务器上的下载器，利用高带宽的优势做跳板加速本地下载，主要用于加速国内下载缓慢的国外资源。
+
+## 特性
+
+* 密码保护，使用了安全性较高的登录方式
+* 未登录也可以查看已下载文件列表，方便分享文件
+* 双击下载链接输入框可读取剪贴板中复制的下载链接（需要https）
+* 自动提取文件名，还可排除http请求参数干扰（如`https://example.com/example.txt?foo=bar` => `example.txt`）
+* 内置实时刷新的进度条
 
 ## 部署指南
 
@@ -9,7 +17,7 @@
 ### 编译UI
 
 ```
-cd ui
+cd /foo/bar/remote-downloader/ui
 # 安装依赖
 npm i
 # 编译
@@ -65,7 +73,7 @@ sudo nginx -s reload
 安装依赖
 
 ```
-cd server
+cd /foo/bar/remote-downloader/server
 npm i
 ```
 
@@ -79,7 +87,7 @@ cd ~/.config/systemd/user
 nano dl.service
 ```
 
-在打开的`dl.service`中输入以下内容
+在打开的`dl.service`中输入以下内容。`ExecStart`处的`/usr/bin/node`是node的默认安装位置，如果不确定安装在何处可以使用`which node`命令查看
 
 ```
 [Unit]
@@ -89,7 +97,7 @@ Wants=network.target
 
 [Service]
 WorkingDirectory=/foo/bar/remote-downloader/server
-ExecStart=/usr/bin/node /foo/bar/remote-downloader/server/app.js  #此处node位置可用which node命令查看
+ExecStart=/usr/bin/node /foo/bar/remote-downloader/server/app.js
 Restart=on-failure
 KillMode=mixed
 
@@ -110,3 +118,4 @@ systemctl --user enable dl.service  #取消自启则将enable改成disable
 ## TODO
 
 - [ ] 编写自动安装脚本
+- [ ] 由用户决定是否在未登录状态显示已下载列表
