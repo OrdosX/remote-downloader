@@ -37,7 +37,7 @@
               <b-icon-shield-lock />
             </b-input-group-text>
           </b-input-group-prepend>
-          <b-form-input v-model="password" :state="passwordOK"></b-form-input>
+          <b-form-input v-model="password" :state="passwordOK" type="password" @keyup.enter="login"></b-form-input>
           <b-input-group-append>
             <b-input-group-text @click="login">
               <b-icon-play />
