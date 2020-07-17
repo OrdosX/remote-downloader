@@ -139,6 +139,11 @@ app.delete('/tasks/:id', (req, res) => {
 
 // 接口：获取文件及其链接的列表
 app.get('/files', (req, res) => {
+    let isLogin = keys.find(e => {return e == req.session.key})
+    if(!isLogin && process.env.PRIVATE_FILELIST === "true") {
+        res.json({code: CODE_UNAUTHORIZED, files: []});
+        return;
+    }
     fs.readdir(downloadDir, (_err, fileName) => {
         let files = [];
         for(let i = 0; i < fileName.length; i++) {
@@ -147,7 +152,7 @@ app.get('/files', (req, res) => {
             }
             files.push({name: fileName[i], URL: prefix+'/'+process.env.DOWNLOAD_DIR+'/'+fileName[i]});
         }
-        if(!keys.find(e => {return e == req.session.key})) {
+        if(!isLogin) {
             res.json({code: CODE_UNAUTHORIZED, files});
         } else {
             res.json({code: CODE_SUCCESS, files});

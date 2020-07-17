@@ -120,4 +120,5 @@ systemctl --user enable dl.service  #取消自启则将enable改成disable
 ## TODO
 
 - [ ] 编写自动安装脚本
-- [ ] 由用户决定是否在未登录状态显示已下载列表
+- [x] 由用户决定是否在未登录状态显示已下载列表
+- [ ] 添加注销功能
