@@ -40,6 +40,8 @@ server {
     server_name example.com;  #此处替换为你的域名，若无域名则填下划线（如server_name _;）
     index index.html;
     root /foo/bar/remote-downloader/ui/dist;  #/foo/bar/remote-downloader是前述代码目录，下同
+    gzip_static on;  #使nginx使用预压缩的gz文件
+    gzip_vary on;  #客户端不支持gzip压缩时返回原文件
 
     location /files/ {
         alias /foo/bar/remote-downloader/server/files/;
