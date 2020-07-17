@@ -42,7 +42,7 @@ app.use(session({
 }))
 app.use((req, res, next) => {
     // 未登录用户可以登录和查看文件列表
-    if(req.path == '/keys' && req.method == 'POST') {
+    if(req.path == '/session' && req.method == 'POST') {
         next();
     } else if(req.path == '/salt' && req.method == 'GET') {
         next();
@@ -152,11 +152,7 @@ app.get('/files', (req, res) => {
             }
             files.push({name: fileName[i], URL: prefix+'/'+process.env.DOWNLOAD_DIR+'/'+fileName[i]});
         }
-        if(!isLogin) {
-            res.json({code: CODE_UNAUTHORIZED, files});
-        } else {
-            res.json({code: CODE_SUCCESS, files});
-        }
+        res.json({code: CODE_SUCCESS, files});
     })
 })
 
@@ -179,8 +175,18 @@ app.get('/salt', (req, res) => {
     res.json({saltID: saltID, salt: salt});
 })
 
-// 接口：登录，获取key
-app.post('/keys', (req, res) => {
+//接口：是否登录
+app.get('/session', (req, res) => {
+    let isLogin = keys.find(e => {return e == req.session.key})
+    if(!isLogin) {
+        res.json({code: CODE_UNAUTHORIZED});
+    } else {
+        res.json({code: CODE_SUCCESS});
+    }
+})
+
+// 接口：登录
+app.post('/session', (req, res) => {
     var jsonString = '';
     req.on("data", (chunk) => {
         jsonString += chunk;
@@ -208,6 +214,11 @@ app.post('/keys', (req, res) => {
             res.json({code: CODE_WRONG_PASSWORD, errmsg: '密码错误'});
         }
     })
+})
+
+app.delete('/session', (req, res) => {
+    keys = keys.filter(e => {e != req.session.key})
+    res.json({code: CODE_SUCCESS});
 })
 
 app.listen(Number.parseInt(process.env.PORT), ()=>{

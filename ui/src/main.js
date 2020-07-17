@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import { BootstrapVue, BIcon, BIconLink45deg, BIconX, BIconFileEarmarkText, BIconPlay, BIconStopFill, BIconShieldLock, BIconClipboard, BIconTrash } from 'bootstrap-vue'
+import { BootstrapVue, BIcon, BIconLink45deg, BIconX, BIconFileEarmarkText, BIconPlay, BIconStopFill, BIconShieldLock, BIconClipboard, BIconTrash, BIconBoxArrowRight, BIconExclamationCircle, BIconCircleFill } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
@@ -14,6 +14,9 @@ Vue.component('BIconLink45deg', BIconLink45deg)
 Vue.component('BIconClipboard', BIconClipboard)
 Vue.component('BIconShieldLock', BIconShieldLock)
 Vue.component('BIconFileEarmarkText', BIconFileEarmarkText)
+Vue.component('BIconBoxArrowRight', BIconBoxArrowRight)
+Vue.component('BIconExclamationCircle', BIconExclamationCircle)
+Vue.component('BIconCircleFill', BIconCircleFill)
 
 Vue.config.productionTip = false
 
