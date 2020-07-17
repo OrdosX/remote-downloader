@@ -134,7 +134,7 @@ export default {
         });
     },
     newTask: function() {
-      if (this.name.length == 0 || this.url.length == 0 || !this.nameOK) {
+      if (this.name.length == 0 || this.url.length == 0 || this.nameOK == false) {
         return;
       }
       this.downloading = true;
