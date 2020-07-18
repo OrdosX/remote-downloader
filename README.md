@@ -82,11 +82,8 @@ npm i
 配置进程守护
 
 ```
-# 创建存放脚本的目录
-mkdir -p ~/.config/systemd/user
-cd ~/.config/systemd/user
 # 新建并编辑脚本，名称可以自己指定
-nano dl.service
+nano /etc/systemd/system/dl.service
 ```
 
 在打开的`dl.service`中输入以下内容。`ExecStart`处的`/usr/bin/node`是node的默认安装位置，如果不确定安装在何处可以使用`which node`命令查看
@@ -110,9 +107,9 @@ WantedBy=default.target
 启动服务并设为自启
 
 ```
-systemctl --user daemon-reload
-systemctl --user start dl.service
-systemctl --user enable dl.service  #取消自启则将enable改成disable
+sudo systemctl daemon-reload
+sudo systemctl start dl.service
+sudo systemctl enable dl.service  #取消自启则将enable改成disable
 ```
 
 现在访问你的域名/IP地址，应该可以正常使用
@@ -121,4 +118,4 @@ systemctl --user enable dl.service  #取消自启则将enable改成disable
 
 - [ ] 编写自动安装脚本
 - [x] 由用户决定是否在未登录状态显示已下载列表
-- [ ] 添加注销功能
+- [x] 添加注销功能
