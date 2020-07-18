@@ -19,11 +19,22 @@ export default {
 </script>
 
 <style>
+@media only screen and (max-width: 768px) {
+  .o-logout-btn {
+    left: 0.5em;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .o-logout-btn {
+    right: 2em;
+  }
+}
+
 .o-logout-btn {
   align-items: center;
   justify-content: center;
   border-radius: 500px;
-  right: 2em;
   bottom: 6em;
   position: fixed;
   cursor: pointer;

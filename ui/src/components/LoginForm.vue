@@ -6,7 +6,7 @@
           <b-icon-shield-lock />
         </b-input-group-text>
       </b-input-group-prepend>
-      <b-form-input v-model="buffer" :state="passwordOK" @input="input" @keyup.enter="login"></b-form-input>
+      <b-form-input v-model="buffer" :state="passwordOK" @input="input" @keyup.enter="login" autofocus></b-form-input>
       <b-input-group-append>
         <b-input-group-text @click="login">
           <b-icon-play />
@@ -47,6 +47,7 @@ export default {
       })
     },
     input: function() {
+      this.passwordOK = null
       this.password += this.buffer.charAt(this.buffer.length-1)
       this.password = this.password.slice(0, this.buffer.length)
       this.buffer = this.genMask(this.buffer.length)

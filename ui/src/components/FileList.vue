@@ -1,6 +1,6 @@
 <template>
-  <b-col md="8" class="mt-3">
-    <b-table-simple class="shadow">
+  <b-col md="8" class="mt-3 shadow">
+    <b-table-simple>
       <b-thead>
         <b-th>文件名</b-th>
         <b-th class="text-right">操作</b-th>
@@ -8,19 +8,19 @@
       <b-tr v-for="f in files" :key="f.name">
         <b-td>{{ f.name }}</b-td>
         <b-td class="text-right">
-          <b-button variant="light" :href="f.URL" class="mr-3 shadow-sm">
+          <b-button variant="light" :href="f.URL" class="shadow-sm">
             <b-icon-link45deg />
           </b-button>
-          <b-button variant="light" :data-clipboard-text="f.URL" class="clipboard-item mr-3 shadow-sm">
+          <b-button variant="light" :data-clipboard-text="f.URL" class="clipboard-item ml-3 mt-1 shadow-sm">
             <b-icon-clipboard />
           </b-button>
-          <b-button variant="danger" @click="removeFile(f.name)" v-if="isLogin" class="shadow-sm">
+          <b-button variant="danger" @click="removeFile(f.name)" v-if="isLogin" class="ml-3 mt-1 shadow-sm">
             <b-icon-trash />
           </b-button>
         </b-td>
       </b-tr>
     </b-table-simple>
-    <div class="o-hint-container" v-if="status!=='hide'">
+    <div class="o-hint-container mb-3" v-if="status!=='hide'">
       <b-icon-exclamation-circle font-scale="2" v-if="status==='error'" />
       <b-icon-circle-fill font-scale="2" animation="throb" v-if="status==='loading'" />
       <span class="o-hint-message">{{ message }}</span>
@@ -30,6 +30,7 @@
 
 <script>
 import axios from "axios";
+import Clipboard from "clipboard";
 export default {
   name: "FileList",
   props: ["update", "isLogin"],
@@ -73,6 +74,9 @@ export default {
     update: function() {
       this.listFiles();
     }
+  },
+  mounted: function() {
+    new Clipboard(".clipboard-item");
   }
 };
 </script>

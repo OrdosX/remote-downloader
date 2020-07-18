@@ -42,7 +42,6 @@
 
 <script>
 import axios from "axios";
-import Clipboard from "clipboard";
 export default {
   name: "TaskControl",
   data: function() {
@@ -159,8 +158,6 @@ export default {
         }
       }, 500);
     });
-
-    new Clipboard(".clipboard-item");
   }
 };
 </script>

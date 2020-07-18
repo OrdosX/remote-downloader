@@ -16,11 +16,22 @@ export default {
 </script>
 
 <style>
+@media only screen and (max-width: 768px) {
+  .o-github-btn {
+    left: 0.5em;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .o-github-btn {
+    right: 2em;
+  }
+}
+
 .o-github-btn {
   align-items: center;
   justify-content: center;
   border-radius: 500px;
-  right: 2em;
   bottom: 2em;
   position: fixed;
   cursor: pointer;
