@@ -6,6 +6,7 @@
       <FileList :update="fileListLastUpdate" :isLogin="isLogin" />
     </b-row>
     <LogoutButton v-if="isLogin" @logout="updateStatus" />
+    <GithubButton />
   </div>
 </template>
 
@@ -14,14 +15,16 @@ import axios from 'axios';
 import LoginForm from './components/LoginForm';
 import TaskControl from './components/TaskControl';
 import FileList from './components/FileList';
-import LogoutButton from './components/LogoutButton'
+import LogoutButton from './components/LogoutButton';
+import GithubButton from './components/GithubButton';
 export default {
   name: "App",
   components: {
     LoginForm,
     TaskControl,
     FileList,
-    LogoutButton
+    LogoutButton,
+    GithubButton
   },
   data: function() {
     return {

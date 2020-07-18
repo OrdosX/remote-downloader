@@ -1,30 +1,27 @@
 <template>
-  <div class="o-logout-btn" role="button" @click="logout">
-    <b-icon-box-arrow-right font-scale="1.5" />
+  <div class="o-github-btn" role="button" @click="go">
+    <img class="o-github-text" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 export default {
-  name: "LogoutButton",
+  name: "GithubButton",
   methods: {
-    logout: function() {
-      axios.delete('/api/session').then(() => {
-        this.$emit("logout");
-      })
+    go: function() {
+      window.open('https://github.com/OrdosX/remote-downloader')
     }
   }
 };
 </script>
 
 <style>
-.o-logout-btn {
+.o-github-btn {
   align-items: center;
   justify-content: center;
   border-radius: 500px;
   right: 2em;
-  bottom: 6em;
+  bottom: 2em;
   position: fixed;
   cursor: pointer;
   display: flex;
@@ -37,7 +34,12 @@ export default {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
 }
 
-.o-logout-btn:hover {
+.o-github-btn:hover {
   background-color: #e8f0fe;
+}
+
+.o-github-text {
+    height: 1.5em;
+    width: 1.5em;
 }
 </style>
