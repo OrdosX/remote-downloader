@@ -1,20 +1,20 @@
 <template>
-  <b-col md="8">
-    <b-table-simple>
+  <b-col md="8" class="mt-3">
+    <b-table-simple class="shadow">
       <b-thead>
         <b-th>文件名</b-th>
-        <b-th>操作</b-th>
+        <b-th class="text-right">操作</b-th>
       </b-thead>
       <b-tr v-for="f in files" :key="f.name">
         <b-td>{{ f.name }}</b-td>
-        <b-td>
-          <b-button variant="primary" :href="f.URL" class="mr-3">
+        <b-td class="text-right">
+          <b-button variant="light" :href="f.URL" class="mr-3 shadow-sm">
             <b-icon-link45deg />
           </b-button>
-          <b-button variant="success" :data-clipboard-text="f.URL" class="clipboard-item mr-3">
+          <b-button variant="light" :data-clipboard-text="f.URL" class="clipboard-item mr-3 shadow-sm">
             <b-icon-clipboard />
           </b-button>
-          <b-button variant="danger" @click="removeFile(f.name)" v-if="isLogin">
+          <b-button variant="danger" @click="removeFile(f.name)" v-if="isLogin" class="shadow-sm">
             <b-icon-trash />
           </b-button>
         </b-td>

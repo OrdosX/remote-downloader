@@ -1,5 +1,5 @@
 <template>
-  <div class="o-logout-btn" role="button" @click="logout">
+  <div class="o-logout-btn shadow" role="button" @click="logout">
     <b-icon-box-arrow-right font-scale="1.5" />
   </div>
 </template>
@@ -34,7 +34,6 @@ export default {
   padding-left: 1em;
   padding-right: 1em;
   background-color: rgb(255, 255, 255);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
 }
 
 .o-logout-btn:hover {

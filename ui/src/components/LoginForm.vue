@@ -1,6 +1,6 @@
 <template>
   <b-col md="8">
-    <b-input-group class="mt-3">
+    <b-input-group class="mt-3 shadow">
       <b-input-group-prepend>
         <b-input-group-text>
           <b-icon-shield-lock />

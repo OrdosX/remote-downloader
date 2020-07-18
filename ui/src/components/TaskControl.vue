@@ -1,6 +1,6 @@
 <template>
   <b-col md="8">
-    <b-input-group class="mt-3">
+    <b-input-group class="mt-3 shadow">
       <b-input-group-prepend>
         <b-input-group-text>
           <b-icon-link45deg />
@@ -13,7 +13,7 @@
         </b-input-group-text>
       </b-input-group-append>
     </b-input-group>
-    <b-input-group class="mt-3">
+    <b-input-group class="mt-3 shadow">
       <b-input-group-prepend>
         <b-input-group-text>
           <b-icon-file-earmark-text />

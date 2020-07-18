@@ -1,5 +1,5 @@
 <template>
-  <div class="o-github-btn" role="button" @click="go">
+  <div class="o-github-btn shadow" role="button" @click="go">
     <img class="o-github-text" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/github.svg" />
   </div>
 </template>
@@ -31,7 +31,6 @@ export default {
   padding-left: 1em;
   padding-right: 1em;
   background-color: rgb(255, 255, 255);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
 }
 
 .o-github-btn:hover {
