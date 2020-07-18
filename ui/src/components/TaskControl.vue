@@ -82,7 +82,7 @@ export default {
         })
         .catch(error => {
           alert("无法读取剪贴板：", error);
-          console.log(error);
+          console.error(error);
         });
     },
     newTask: function() {

@@ -74,7 +74,7 @@ app.post('/tasks', (req, res) => {
         try {
             var body = JSON.parse(jsonString);
         } catch (error) {
-            console.log(jsonString);
+            console.error(jsonString);
             res.json({ code: CODE_WRONG_INPUT, errmsg: error.message});
             return;
         }
@@ -195,7 +195,7 @@ app.post('/session', (req, res) => {
         try {
             var body = JSON.parse(jsonString);
         } catch (error) {
-            console.log(jsonString);
+            console.error(jsonString);
             res.json({ code: CODE_WRONG_INPUT, errmsg: error.message});
             return;
         }

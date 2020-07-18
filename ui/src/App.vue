@@ -34,6 +34,8 @@ export default {
       this.fileListLastUpdate = Date.now();
       axios.get('/api/session').then(response => {
         this.isLogin = (response.data.code == 0)
+      }).catch(err => {
+        console.error(err);
       })
     }
   },

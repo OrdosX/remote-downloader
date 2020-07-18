@@ -60,7 +60,7 @@ export default {
       }).catch((err) => {
         this.message = this.messages.ERR_NETWORK
         this.status = 'error'
-        console.log(err);
+        console.error(err);
       });
     },
     removeFile: function(name) {
