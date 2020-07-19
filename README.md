@@ -114,6 +114,35 @@ sudo systemctl enable dl.service  #取消自启则将enable改成disable
 
 现在访问你的域名/IP地址，应该可以正常使用
 
+## 基于nginx调试的指南
+
+nginx.conf（或者单独的文件）配置如下，输入后保存并启动nginx服务。
+
+```
+server {
+    listen 80;
+    server_name _;  #此处改为下划线以便通过localhost访问
+    index index.html;
+    # root /foo/bar/remote-downloader/ui/dist;  #root字段注释掉或者删除
+    gzip_static on;
+    gzip_vary on;
+
+    location /files/ {
+        alias /foo/bar/remote-downloader/server/files/;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:8081/;
+    }
+
+    location / {  #将未匹配到/files和/api的请求转发给vue-cli的开发服务器
+        proxy_pass http://localhost:8080/;
+    }
+}
+```
+
+然后同时开两个命令行，一个切换到`ui`目录下输入`npm run serve`，另一个切换到`server`目录下输入`npm run start`，即可通过[http://localhost](http://localhost)访问本地网站。
+
 ## TODO
 
 - [ ] 编写自动安装脚本
