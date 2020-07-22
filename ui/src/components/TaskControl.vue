@@ -53,7 +53,10 @@ export default {
       // 任务控制部分
       progress: 0,
       taskID: "",
-      downloading: false
+      downloading: false,
+      startTime: null,
+      updateIntervals: {fast: 500, slow: 3000},
+      updateInterval: 500
     };
   },
   methods: {
@@ -120,17 +123,18 @@ export default {
       this.nameOK = null;
     },
     resetControl: function() {
-      this.url = "";
-      this.name = "";
-      this.nameOK = null;
+      this.resetForm();
       this.progress = 0;
       this.taskID = "";
       this.downloading = false;
+      this.startTime = null;
+      this.updateInterval = this.updateIntervals.fast;
     }
   },
   mounted: function() {
     let progressBar = document.getElementById("progress-bar");
     progressBar.addEventListener("update-progress", () => {
+      if(!this.startTime) this.startTime = Date.now();
       setTimeout(() => {
         if(this.taskID != "") {
           axios.get("/api/tasks/" + this.taskID).then(response => {
@@ -142,6 +146,10 @@ export default {
               //此时正在下载
               this.downloading = true;
               this.progress = response.data.progress;
+              if(Date.now() > this.startTime + 30000) {
+                //如果过了三十秒还没下载完则进入慢速模式，请求数据间隔由0.5s改为3s
+                this.updateInterval = this.updateIntervals.slow;
+              }
               progressBar.dispatchEvent(new Event("update-progress"));
             } else if (response.data.code == 2) {
               //此时取消下载
@@ -156,7 +164,7 @@ export default {
             console.error(err)
           });
         }
-      }, 500);
+      }, this.updateInterval);
     });
   }
 };
