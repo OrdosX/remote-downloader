@@ -6,7 +6,10 @@
         <b-th class="text-right">操作</b-th>
       </b-thead>
       <b-tr v-for="f in files" :key="f.name">
-        <b-td>{{ f.name }}</b-td>
+        <b-td><span :id="f.name">{{ f.name }}</span></b-td>
+        <b-tooltip :target="f.name">
+          <span>{{ f.modified }} | {{ f.size }} </span>
+        </b-tooltip>
         <b-td class="text-right">
           <b-button variant="light" :href="f.URL" class="shadow-sm">
             <b-icon-link45deg />

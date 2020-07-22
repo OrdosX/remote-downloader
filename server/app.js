@@ -144,13 +144,26 @@ app.get('/files', (req, res) => {
         res.json({code: CODE_UNAUTHORIZED, files: []});
         return;
     }
-    fs.readdir(downloadDir, (_err, fileName) => {
+    fs.readdir(downloadDir, (_err, fileNames) => {
+        let sortedFileNames = fileNames.sort((a, b) => {
+            //倒序排列，后来居上
+            return (fs.statSync(downloadDir+'/'+b).mtimeMs - fs.statSync(downloadDir+'/'+a).mtimeMs)
+        })
         let files = [];
-        for(let i = 0; i < fileName.length; i++) {
-            if(fileName[i] == '.placeholder') {
-                continue;
-            }
-            files.push({name: fileName[i], URL: prefix+'/'+process.env.DOWNLOAD_DIR+'/'+fileName[i]});
+        for(let i = 0; i < sortedFileNames.length; i++) {
+            let fileInfo = fs.statSync(downloadDir+'/'+sortedFileNames[i])
+            let modified = fileInfo.mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false })
+            let size = (() => {
+                let sizeInByte = fs.statSync(downloadDir+'/'+sortedFileNames[i]).size
+                if(sizeInByte == 0) return '0B'
+                let t = Math.floor( Math.log(sizeInByte) / Math.log(1024) );
+                return ( sizeInByte / Math.pow(1024, t) ).toFixed(2) * 1 + ['B', 'kB', 'MB', 'GB', 'TB'][t];
+            })()
+            files.push({
+                name: sortedFileNames[i],
+                URL: prefix+'/'+process.env.DOWNLOAD_DIR+'/'+sortedFileNames[i],
+                modified, size
+            });
         }
         res.json({code: CODE_SUCCESS, files});
     })
