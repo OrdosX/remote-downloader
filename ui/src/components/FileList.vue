@@ -8,7 +8,7 @@
       <b-tr v-for="f in files" :key="f.name">
         <b-td><span :id="f.name">{{ f.name }}</span></b-td>
         <b-tooltip :target="f.name">
-          <span>{{ f.modified }} | {{ f.size }} </span>
+          <span>{{ f.modified }}</span><br /><span>{{ f.size }}</span>
         </b-tooltip>
         <b-td class="text-right">
           <b-button variant="light" :href="f.URL" class="shadow-sm">
