@@ -48,14 +48,14 @@ export default {
     },
     input: function() {
       this.passwordOK = null
-      this.password += this.buffer.charAt(this.buffer.length-1)
+      this.password += this.buffer.slice(this.password.length, this.buffer.length)
       this.password = this.password.slice(0, this.buffer.length)
       this.buffer = this.genMask(this.buffer.length)
     },
     genMask: function(length) {
       let mask = '';
       for(let i = 0; i < length; i++) {
-        mask += '¿'
+        mask += '♡'
       }
       return mask
     }
