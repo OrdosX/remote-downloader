@@ -38,7 +38,10 @@ const CODE_WRONG_PASSWORD = -5;
 app.use(session({
     secret: process.env.PASSWORD,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 365 * 24 * 60 * 60 * 1000
+    }
 }))
 app.use((req, res, next) => {
     // 未登录用户可以登录和查看文件列表
