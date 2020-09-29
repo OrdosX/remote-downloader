@@ -8,7 +8,9 @@
       <b-tr v-for="f in files" :key="f.name">
         <b-td><span :id="f.name">{{ f.name }}</span></b-td>
         <b-tooltip :target="f.name">
-          <span>{{ f.modified }}</span><br /><span>{{ f.size }}</span>
+          <span>{{ new Intl.DateTimeFormat('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12:false}).format(new Date(f.modified)) }}</span>
+          <br />
+          <span>{{ f.size }}</span>
         </b-tooltip>
         <b-td class="text-right">
           <b-button variant="light" :href="f.URL" class="shadow-sm">

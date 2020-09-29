@@ -152,7 +152,7 @@ app.get('/files', (req, res) => {
         let files = [];
         for(let i = 0; i < sortedFileNames.length; i++) {
             let fileInfo = fs.statSync(downloadDir+'/'+sortedFileNames[i])
-            let modified = fileInfo.mtime.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false })
+            let modified = fileInfo.mtime.getTime()
             let size = (() => {
                 let sizeInByte = fs.statSync(downloadDir+'/'+sortedFileNames[i]).size
                 if(sizeInByte == 0) return '0B'
