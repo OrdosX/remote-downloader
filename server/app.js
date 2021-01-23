@@ -2,6 +2,8 @@ const { DownloaderHelper } = require('node-downloader-helper');
 const sha256 = require("js-sha256").sha256
 const express = require('express');
 const session = require('express-session');
+const rateLimit = require('express-rate-limit');
+const sanitize = require('sanitize-filename');
 const uuid = require('uuid/v4');
 const logger = require('./log');
 const fs = require('fs');
@@ -65,6 +67,13 @@ app.use((req, res, next) => {
         next();
     }
 })
+
+//限流文件操作（读取列表、删除文件）十分钟十次
+const fileOperationLimit = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 10
+})
+app.use('/files', fileOperationLimit);
 
 // 接口：新建任务
 // 示例：{URL: "https://example.com/xxx", name: "xxx"}
@@ -174,9 +183,14 @@ app.get('/files', (req, res) => {
 
 // 接口：删除已下载文件
 app.delete('/files/:name', (req, res) => {
-    fs.exists(downloadDir+'/'+req.params.name, (exists) => {
+    let sanitizedName = sanitize(req.params.name);
+    if(sanitizedName != req.params.name) {
+        res.json({ code: CODE_NOT_FOUND, errmsg: "文件不存在"});
+        return;
+    }
+    fs.exists(downloadDir+'/'+sanitizedName, (exists) => {
         if(exists) {
-            fs.unlinkSync(downloadDir+'/'+req.params.name);
+            fs.unlinkSync(downloadDir+'/'+sanitizedName);
             res.json({ code: CODE_SUCCESS, errmsg: "" });
         } else {
             res.json({ code: CODE_NOT_FOUND, errmsg: "文件不存在"});
@@ -233,7 +247,7 @@ app.post('/session', (req, res) => {
 })
 
 app.delete('/session', (req, res) => {
-    keys = keys.filter(e => {e != req.session.key})
+    keys = keys.filter(e => {return e != req.session.key})
     res.json({code: CODE_SUCCESS});
 })
 
