@@ -42,6 +42,8 @@
 
 <script>
 import axios from "axios";
+import urlencode from "urlencode"
+import debounce from 'lodash/debounce'
 export default {
   name: "TaskControl",
   data: function() {
@@ -60,6 +62,18 @@ export default {
     };
   },
   methods: {
+    getNameFromHeader: debounce(function () {
+      axios.get('/api/filename', {params: {url: urlencode(this.url)}}).then(res => {
+        if(res.data.name !== '') {
+          this.name = res.data.name
+          this.nameOK = true
+        } else {
+          this.nameOK = false
+        }
+      }).catch(() => {
+        this.nameOK = false
+      })
+    }, 1000),
     updateNameFromURL: function() {
       let splitedURL = this.url.split("/");
       let possibleName = splitedURL[splitedURL.length - 1];
@@ -73,7 +87,7 @@ export default {
         this.nameOK = true;
         return;
       }
-      this.nameOK = false;
+      this.getNameFromHeader()
     },
     getClip: function() {
       navigator.clipboard

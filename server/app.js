@@ -9,6 +9,8 @@ const logger = require('./log')
 const fs = require('fs')
 const app = express()
 const path = require('path')
+const axios = require('axios').default
+const {decode} = require('urlencode')
 
 // 在这里储存任务信息
 const tasks = new Map()
@@ -75,6 +77,20 @@ const fileOperationLimit = rateLimit({
   max: 10
 })
 app.use('/files', fileOperationLimit)
+
+// 接口：通过header获取文件名
+// 示例：/filename?url=xxx
+app.get('/filename', (req, res) => {
+  axios.head(decode(req.query['url'])).then(result => {
+    if (result.headers['content-disposition']) {
+      res.json({name: result.headers['content-disposition'].match(/filename=(.+)/)[1]})
+    } else {
+      res.json({name: ''})
+    }
+  }).catch(err => {
+    res.json({name:''})
+  })
+})
 
 // 接口：新建任务
 // 示例：{URL: "https://example.com/xxx", name: "xxx"}
