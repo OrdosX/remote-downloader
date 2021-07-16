@@ -6,13 +6,13 @@
 
 <script>
 export default {
-  name: "GithubButton",
+  name: 'GithubButton',
   methods: {
-    go: function() {
+    go: function () {
       window.open('https://github.com/OrdosX/remote-downloader')
     }
   }
-};
+}
 </script>
 
 <style>

@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import axios from "axios";
-import Clipboard from "clipboard";
+import axios from 'axios'
+import Clipboard from 'clipboard'
 export default {
-  name: "FileList",
-  props: ["update", "isLogin"],
-  data: function() {
+  name: 'FileList',
+  props: ['update', 'isLogin'],
+  data: function () {
     return {
       files: [],
       status: 'loading',
@@ -48,16 +48,16 @@ export default {
         ERR_NETWORK: '无法连接到服务器',
         ERR_NO_CONTENT: '下载列表为空'
       }
-    };
+    }
   },
   methods: {
-    listFiles: function() {
-      axios.get("/api/files").then(response => {
-        this.files = [];
-        for (let f of response.data.files) {
-          this.files.push(f);
+    listFiles: function () {
+      axios.get('/api/files').then(response => {
+        this.files = []
+        for (const f of response.data.files) {
+          this.files.push(f)
         }
-        if(this.files.length == 0) {
+        if (this.files.length === 0) {
           this.message = this.messages.ERR_NO_CONTENT
           this.status = 'error'
         } else {
@@ -66,24 +66,24 @@ export default {
       }).catch((err) => {
         this.message = this.messages.ERR_NETWORK
         this.status = 'error'
-        console.error(err);
-      });
+        console.error(err)
+      })
     },
-    removeFile: function(name) {
-      axios.delete("/api/files/" + name).then(() => {
-        this.listFiles();
-      });
+    removeFile: function (name) {
+      axios.delete('/api/files/' + name).then(() => {
+        this.listFiles()
+      })
     }
   },
   watch: {
-    update: function() {
-      this.listFiles();
+    update: function () {
+      this.listFiles()
     }
   },
-  mounted: function() {
-    new Clipboard(".clipboard-item");
+  mounted: function () {
+    new Clipboard('.clipboard-item')
   }
-};
+}
 </script>
 
 <style>

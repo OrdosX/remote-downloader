@@ -11,14 +11,14 @@
 </template>
 
 <script>
-import axios from 'axios';
-import LoginForm from './components/LoginForm';
-import TaskControl from './components/TaskControl';
-import FileList from './components/FileList';
-import LogoutButton from './components/LogoutButton';
-import GithubButton from './components/GithubButton';
+import axios from 'axios'
+import LoginForm from './components/LoginForm'
+import TaskControl from './components/TaskControl'
+import FileList from './components/FileList'
+import LogoutButton from './components/LogoutButton'
+import GithubButton from './components/GithubButton'
 export default {
-  name: "App",
+  name: 'App',
   components: {
     LoginForm,
     TaskControl,
@@ -26,26 +26,26 @@ export default {
     LogoutButton,
     GithubButton
   },
-  data: function() {
+  data: function () {
     return {
       fileListLastUpdate: 0,
       isLogin: false
-    };
+    }
   },
   methods: {
-    updateStatus: function() {
-      this.fileListLastUpdate = Date.now();
+    updateStatus: function () {
+      this.fileListLastUpdate = Date.now()
       axios.get('/api/session').then(response => {
         this.isLogin = (response.data.code == 0)
       }).catch(err => {
-        console.error(err);
+        console.error(err)
       })
     }
   },
-  mounted: function() {
-    this.updateStatus();
+  mounted: function () {
+    this.updateStatus()
   }
-};
+}
 </script>
 
 <style>

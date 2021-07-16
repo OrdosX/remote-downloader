@@ -5,17 +5,17 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
-  name: "LogoutButton",
+  name: 'LogoutButton',
   methods: {
-    logout: function() {
+    logout: function () {
       axios.delete('/api/session').then(() => {
-        this.$emit("logout");
+        this.$emit('logout')
       })
     }
   }
-};
+}
 </script>
 
 <style>

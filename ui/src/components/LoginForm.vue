@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import axios from "axios";
-import {sha256} from "js-sha256"
+import axios from 'axios'
+import { sha256 } from 'js-sha256'
 export default {
-  name: "LoginForm",
-  data: function() {
+  name: 'LoginForm',
+  data: function () {
     return {
       buffer: '',
       password: '',
@@ -29,32 +29,32 @@ export default {
     }
   },
   methods: {
-    login: function() {
-      axios.get("/api/salt").then(resp1 => {
-        axios.post("/api/session", {
+    login: function () {
+      axios.get('/api/salt').then(resp1 => {
+        axios.post('/api/session', {
           saltID: resp1.data.saltID,
           password: sha256(this.password + resp1.data.salt)
         }).then(resp2 => {
-          if(resp2.data.code == 0) {
+          if (resp2.data.code == 0) {
             this.$emit('login-succ')
           } else {
-            this.buffer = "";
-            this.password = "";
-            this.passwordOK = false;
-            console.error(resp2.data.errmsg);
+            this.buffer = ''
+            this.password = ''
+            this.passwordOK = false
+            console.error(resp2.data.errmsg)
           }
         })
       })
     },
-    input: function() {
+    input: function () {
       this.passwordOK = null
       this.password += this.buffer.slice(this.password.length, this.buffer.length)
       this.password = this.password.slice(0, this.buffer.length)
       this.buffer = this.genMask(this.buffer.length)
     },
-    genMask: function(length) {
-      let mask = '';
-      for(let i = 0; i < length; i++) {
+    genMask: function (length) {
+      let mask = ''
+      for (let i = 0; i < length; i++) {
         mask += '♡'
       }
       return mask
